@@ -35,5 +35,5 @@ func findCombinationSum(k int, target int, index int, c []int, res *[][]int) {
 }
 
 func main() {
-	fmt.Println(combinationSum(3, 6))
+	fmt.Println(combinationSum(3, 5))
 }
