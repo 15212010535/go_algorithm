@@ -6,7 +6,6 @@ import "fmt"
 	给定一个整数数组 A，找到 min(B) 的总和，其中 B 的范围为 A 的每个（连续）子数组。
 	每个子区间内最小值的和
 */
-
 // 方法一： DP + 单调栈
 func sumSubarrayMinsOne(A []int) int {
 	stack, dp, res, mod := []int{}, make([]int, len(A)+1), 0, 1000000007
