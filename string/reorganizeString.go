@@ -95,10 +95,12 @@ func reorganizeStringTwo(s string) string {
 	for _, ch := range s {
 		ch -= 'a'
 		cnt[ch]++
+		// 寻找最大的重复字符
 		if cnt[ch] > maxCnt {
 			maxCnt = cnt[ch]
 		}
 	}
+	// 大于一半重构不了
 	if maxCnt > (n+1)/2 {
 		return ""
 	}
@@ -107,6 +109,7 @@ func reorganizeStringTwo(s string) string {
 	evenIdx, oddIdx, halfLen := 0, 1, n/2
 	for i, c := range cnt[:] {
 		ch := byte('a' + i)
+		// 重构，每次加2，防止相邻
 		for c > 0 && c <= halfLen && oddIdx < n {
 			ans[oddIdx] = ch
 			c--
