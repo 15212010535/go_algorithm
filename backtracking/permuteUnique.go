@@ -1,0 +1,47 @@
+package main
+
+import (
+	"fmt"
+	"sort"
+)
+
+/*
+	全排列
+*/
+
+func permuteUnique(nums []int) [][]int {
+	if len(nums) == 0 {
+		return [][]int{}
+	}
+	used, p, res := make([]bool, len(nums)), []int{}, [][]int{}
+	sort.Ints(nums)
+	generatePermutationUnique(nums, 0, p, &res, &used)
+	return res
+}
+
+func generatePermutationUnique(nums []int, index int, p []int, res *[][]int, used *[]bool) {
+	if index == len(nums) {
+		temp := make([]int, len(p))
+		copy(temp, p)
+		*res = append(*res, temp)
+		return
+	}
+	for i := 0; i < len(nums); i++ {
+		if !(*used)[i] {
+			// 去重
+			if i > 0 && nums[i] == nums[i-1] && !(*used)[i-1] {
+				continue
+			}
+			(*used)[i] = true
+			p = append(p, nums[i])
+			generatePermutationUnique(nums, index+1, p, res, used)
+			p = p[:len(p)-1]
+			(*used)[i] = false
+		}
+	}
+	return
+}
+
+func main() {
+	fmt.Println(permuteUnique([]int{1, 1, 2}))
+}
