@@ -1,10 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/bits"
+)
 
 var solutions [][]string
 
-func solveNQueens(n int) [][]string {
+// 方法一： 基于集合的回溯
+func solveNQueensOne(n int) [][]string {
 	solutions = [][]string{}
 	queens := make([]int, n)
 	for i := 0; i < n; i++ {
@@ -12,11 +16,11 @@ func solveNQueens(n int) [][]string {
 	}
 	columns := map[int]bool{}
 	diagonals1, diagonals2 := map[int]bool{}, map[int]bool{}
-	backtrack(queens, n, 0, columns, diagonals1, diagonals2)
+	backtrackOne(queens, n, 0, columns, diagonals1, diagonals2)
 	return solutions
 }
 
-func backtrack(queens []int, n int, row int, columns map[int]bool, diagonals1 map[int]bool, diagonals2 map[int]bool) {
+func backtrackOne(queens []int, n int, row int, columns map[int]bool, diagonals1 map[int]bool, diagonals2 map[int]bool) {
 	if row == n {
 		board := generateBoard(queens, n)
 		solutions = append(solutions, board)
@@ -37,7 +41,7 @@ func backtrack(queens []int, n int, row int, columns map[int]bool, diagonals1 ma
 		queens[row] = i
 		columns[i] = true
 		diagonals1[diagonal1], diagonals2[diagonal2] = true, true
-		backtrack(queens, n, row+1, columns, diagonals1, diagonals2)
+		backtrackOne(queens, n, row+1, columns, diagonals1, diagonals2)
 		queens[row] = -1
 		delete(columns, i)
 		delete(diagonals1, diagonal1)
@@ -59,6 +63,35 @@ func generateBoard(queens []int, n int) []string {
 	return board
 }
 
+// 方法二：基于位运算的回溯
+func solveNQueensTwo(n int) [][]string {
+	solutions = [][]string{}
+	queens := make([]int, n)
+	for i := 0; i < n; i++ {
+		queens[i] = -1
+	}
+	solve(queens, n, 0, 0, 0, 0)
+	return solutions
+}
+
+func solve(queens []int, n int, row int, columns int, diagonals1 int, diagonals2 int) {
+	if row == n {
+		board := generateBoard(queens, n)
+		solutions = append(solutions, board)
+		return
+	}
+	availablePositions := ((1 << n) - 1) & (^(columns | diagonals1 | diagonals2))
+	for availablePositions != 0 {
+		position := availablePositions & (-availablePositions)
+		availablePositions = availablePositions & (availablePositions - 1)
+		columns := bits.OnesCount(uint(position - 1))
+		queens[row] = columns
+		solve(queens, n, row+1, columns|position, (diagonals1|position)>>1, (diagonals2|position)<<1)
+		queens[row] = -1
+	}
+}
+
 func main() {
-	fmt.Println(solveNQueens(4))
+	fmt.Println(solveNQueensOne(4))
+	fmt.Println(solveNQueensTwo(4))
 }
