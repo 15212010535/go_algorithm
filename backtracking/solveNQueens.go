@@ -10,6 +10,7 @@ var solutions [][]string
 // 方法一： 基于集合的回溯
 func solveNQueensOne(n int) [][]string {
 	solutions = [][]string{}
+	// 每一行第几个位置为Q
 	queens := make([]int, n)
 	for i := 0; i < n; i++ {
 		queens[i] = -1
@@ -21,19 +22,23 @@ func solveNQueensOne(n int) [][]string {
 }
 
 func backtrackOne(queens []int, n int, row int, columns map[int]bool, diagonals1 map[int]bool, diagonals2 map[int]bool) {
+	// 构造
 	if row == n {
 		board := generateBoard(queens, n)
 		solutions = append(solutions, board)
 		return
 	}
 	for i := 0; i < n; i++ {
+		// 行不可以重复
 		if columns[i] {
 			continue
 		}
+		// 对角线不可以重复
 		diagonal1 := row - i
 		if diagonals1[diagonal1] {
 			continue
 		}
+		// 对角线不可以重复
 		diagonal2 := row + i
 		if diagonals2[diagonal2] {
 			continue
