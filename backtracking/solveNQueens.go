@@ -33,12 +33,12 @@ func backtrackOne(queens []int, n int, row int, columns map[int]bool, diagonals1
 		if columns[i] {
 			continue
 		}
-		// 对角线不可以重复
+		// 左对角线不可以重复
 		diagonal1 := row - i
 		if diagonals1[diagonal1] {
 			continue
 		}
-		// 对角线不可以放置
+		// 右对角线不可以放置
 		diagonal2 := row + i
 		if diagonals2[diagonal2] {
 			continue
